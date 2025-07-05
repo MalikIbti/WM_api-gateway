@@ -1,0 +1,62 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: order-service
+              uri: lb://order-service
+              predicates:
+                - Path=/api/orders/**
+
+            - id: material-service
+              uri: lb://material-service
+              predicates:
+                - Path=/api/materials/**
+
+            - id: customer-service
+              uri: lb://customer-service
+              predicates:
+                - Path=/api/customers/**
+
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
+
+            - id: inbound-service
+              uri: lb://inbound-service
+              predicates:
+                - Path=/api/inbound/**
+
+            - id: outbound-service
+              uri: lb://outbound-service
+              predicates:
+                - Path=/api/outbound/**
+
+            - id: pgr-service
+              uri: lb://pgr-service
+              predicates:
+                - Path=/api/pgr/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: mysupersecurelongjwtsecretkey123456
+
+logging:
+  level:
+    org.springframework.security: DEBUG
